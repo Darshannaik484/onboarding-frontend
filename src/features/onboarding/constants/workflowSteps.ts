@@ -1,9 +1,9 @@
 import type { WorkflowStepKey } from "../../../types/onboarding";
 
 interface StepContent {
-  title: string;
-  description: string;
-  checklist: string[];
+  titleKey: string;
+  descriptionKey: string;
+  checklistKeys: string[];
 }
 
 export const workflowStepOrder: WorkflowStepKey[] = [
@@ -16,28 +16,36 @@ export const workflowStepOrder: WorkflowStepKey[] = [
 
 export const workflowStepContent: Record<WorkflowStepKey, StepContent> = {
   identity: {
-    title: "Identity Verification",
-    description: "Collect and validate personal identity documents for key stakeholders.",
-    checklist: ["Passport", "Government issued ID", "Proof of address"],
+    titleKey: "workflow.identity.title",
+    descriptionKey: "workflow.identity.description",
+    checklistKeys: ["workflow.identity.item1", "workflow.identity.item2", "workflow.identity.item3"],
   },
   company_documents: {
-    title: "Company Documents",
-    description: "Upload legal and registration paperwork for the organization.",
-    checklist: ["Certificate of incorporation", "Company registration proof", "Tax registration"],
+    titleKey: "workflow.companyDocuments.title",
+    descriptionKey: "workflow.companyDocuments.description",
+    checklistKeys: [
+      "workflow.companyDocuments.item1",
+      "workflow.companyDocuments.item2",
+      "workflow.companyDocuments.item3",
+    ],
   },
   financial_documents: {
-    title: "Financial Documents",
-    description: "Provide financial statements and banking documentation.",
-    checklist: ["Bank statements", "Audited reports", "Tax filings"],
+    titleKey: "workflow.financialDocuments.title",
+    descriptionKey: "workflow.financialDocuments.description",
+    checklistKeys: [
+      "workflow.financialDocuments.item1",
+      "workflow.financialDocuments.item2",
+      "workflow.financialDocuments.item3",
+    ],
   },
   compliance: {
-    title: "Compliance Checks",
-    description: "Submit compliance declarations and legal attestations.",
-    checklist: ["AML declaration", "KYC forms", "Regulatory approvals"],
+    titleKey: "workflow.compliance.title",
+    descriptionKey: "workflow.compliance.description",
+    checklistKeys: ["workflow.compliance.item1", "workflow.compliance.item2", "workflow.compliance.item3"],
   },
   review: {
-    title: "Final Review",
-    description: "Review submissions and resolve outstanding validation items.",
-    checklist: ["Review rejected files", "Address blocker comments", "Submit for approval"],
+    titleKey: "workflow.review.title",
+    descriptionKey: "workflow.review.description",
+    checklistKeys: ["workflow.review.item1", "workflow.review.item2", "workflow.review.item3"],
   },
 };

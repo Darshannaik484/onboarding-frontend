@@ -1,9 +1,13 @@
 import { LogOut } from "lucide-react";
 import { Link, Outlet, useNavigate } from "react-router-dom";
+import { useTranslation } from "react-i18next";
+import { LanguageSwitcher } from "../components/common/LanguageSwitcher";
 import { Button } from "../components/ui/button";
 import { useAuthStore } from "../store/auth.store";
+import { isDemoModeEnabled } from "../config/runtime";
 
 export default function DashboardLayout() {
+  const { t } = useTranslation();
   const navigate = useNavigate();
   const user = useAuthStore((state) => state.user);
   const clearAuth = useAuthStore((state) => state.clearAuth);
@@ -19,20 +23,26 @@ export default function DashboardLayout() {
         <div className="mx-auto flex w-full max-w-6xl items-center justify-between px-4 py-3 sm:px-6">
           <div className="flex items-center gap-6">
             <div>
-            <p className="text-sm text-slate-500">AI Onboarding Platform</p>
-            <h1 className="text-lg font-semibold text-slate-900">Dashboard</h1>
+              <p className="text-sm text-slate-500">{t("layout.platformName")}</p>
+              <h1 className="text-lg font-semibold text-slate-900">{t("layout.dashboard")}</h1>
             </div>
             <nav className="hidden items-center gap-4 text-sm text-slate-600 md:flex">
               <Link to="/dashboard" className="transition hover:text-slate-900">
-                Dashboard
+                {t("layout.dashboard")}
               </Link>
             </nav>
           </div>
           <div className="flex items-center gap-3">
+            {isDemoModeEnabled ? (
+              <span className="hidden rounded-full bg-amber-100 px-2 py-1 text-xs font-medium text-amber-700 sm:inline-flex">
+                {t("common.demoMode")}
+              </span>
+            ) : null}
+            <LanguageSwitcher />
             <p className="hidden text-sm text-slate-600 sm:block">{user?.email}</p>
             <Button variant="outline" className="gap-2" onClick={handleLogout}>
               <LogOut className="h-4 w-4" />
-              Logout
+              {t("layout.logout")}
             </Button>
           </div>
         </div>

@@ -1,4 +1,7 @@
 import { Link, useParams } from "react-router-dom";
+import { useTranslation } from "react-i18next";
+import { ErrorState } from "../../../components/common/ErrorState";
+import { LoadingState } from "../../../components/common/LoadingState";
 import { StatusBadge } from "../../../components/common/StatusBadge";
 import { Card, CardContent, CardHeader, CardTitle } from "../../../components/ui/card";
 import { useClientDetailQuery } from "../../onboarding/hooks/useOnboardingQueries";
@@ -6,6 +9,7 @@ import { useOnboardingStore } from "../../../store/onboarding.store";
 import { useEffect } from "react";
 
 export default function ClientDetailPage() {
+  const { t } = useTranslation();
   const { clientId = "" } = useParams();
   const setSelectedClient = useOnboardingStore((state) => state.setSelectedClient);
   const { data, isLoading, isError } = useClientDetailQuery(clientId);
@@ -15,11 +19,11 @@ export default function ClientDetailPage() {
   }, [clientId, setSelectedClient]);
 
   if (isLoading) {
-    return <p className="text-sm text-slate-500">Loading client details...</p>;
+    return <LoadingState label={t("client.loading")} />;
   }
 
   if (isError || !data) {
-    return <p className="text-sm text-red-600">Unable to load client details.</p>;
+    return <ErrorState title={t("client.loadError")} onRetry={() => window.location.reload()} />;
   }
 
   return (
@@ -31,20 +35,22 @@ export default function ClientDetailPage() {
         </CardHeader>
         <CardContent className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
           <div>
-            <p className="text-xs text-slate-500">Contact Email</p>
+            <p className="text-xs text-slate-500">{t("client.contactEmail")}</p>
             <p className="text-sm font-medium text-slate-900">{data.contactEmail}</p>
           </div>
           <div>
-            <p className="text-xs text-slate-500">Jurisdiction</p>
+            <p className="text-xs text-slate-500">{t("client.jurisdiction")}</p>
             <p className="text-sm font-medium text-slate-900">{data.jurisdiction}</p>
           </div>
           <div>
-            <p className="text-xs text-slate-500">Service Tier</p>
+            <p className="text-xs text-slate-500">{t("client.serviceTier")}</p>
             <p className="text-sm font-medium text-slate-900">{data.serviceTier}</p>
           </div>
           <div>
-            <p className="text-xs text-slate-500">Progress</p>
-            <p className="text-sm font-medium text-slate-900">{data.progressPercent}% complete</p>
+            <p className="text-xs text-slate-500">{t("client.progress")}</p>
+            <p className="text-sm font-medium text-slate-900">
+              {t("client.progressComplete", { value: data.progressPercent })}
+            </p>
           </div>
         </CardContent>
       </Card>
@@ -57,7 +63,7 @@ export default function ClientDetailPage() {
         to={`/onboarding/${data.id}`}
         className="inline-flex h-10 items-center justify-center rounded-md bg-blue-600 px-4 text-sm font-medium text-white transition hover:bg-blue-700"
       >
-        Open onboarding workflow
+        {t("client.openWorkflow")}
       </Link>
     </div>
   );

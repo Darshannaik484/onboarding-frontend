@@ -66,7 +66,9 @@ export default function LoginPage() {
               <p className="text-sm text-red-600">{t(errors.password.message || "")}</p>
             )}
           </div>
-          {error && <p className="text-sm text-red-600">{t("auth.loginFailed")}</p>}
+          {error && (
+            <p className="text-sm text-red-600">{(error as Error).message || t("auth.loginFailed")}</p>
+          )}
           <Button className="w-full" type="submit" disabled={isPending}>
             {isPending ? t("common.loading") : t("auth.loginButton")}
           </Button>

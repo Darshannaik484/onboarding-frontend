@@ -1,16 +1,18 @@
 import { Card, CardContent, CardHeader, CardTitle } from "../ui/card";
 import type { DashboardSummary } from "../../types/dashboard";
+import { useTranslation } from "react-i18next";
 
 interface DashboardSummaryCardsProps {
   summary: DashboardSummary;
 }
 
 export const DashboardSummaryCards = ({ summary }: DashboardSummaryCardsProps) => {
+  const { t } = useTranslation();
   const items = [
-    { label: "Total Clients", value: summary.totalClients },
-    { label: "Completed", value: summary.completedOnboarding },
-    { label: "In Progress", value: summary.inProgressOnboarding },
-    { label: "Blocked", value: summary.blockedOnboarding },
+    { label: t("dashboard.totalClients"), value: summary.totalClients },
+    { label: t("dashboard.completed"), value: summary.completedOnboarding },
+    { label: t("dashboard.inProgress"), value: summary.inProgressOnboarding },
+    { label: t("dashboard.blocked"), value: summary.blockedOnboarding },
   ];
 
   return (

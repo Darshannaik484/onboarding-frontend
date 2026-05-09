@@ -5,8 +5,12 @@ import { useOnboardingProgressQuery } from "../hooks/useOnboardingQueries";
 import { useOnboardingStore } from "../../../store/onboarding.store";
 import { useEffect } from "react";
 import { workflowStepOrder } from "../constants/workflowSteps";
+import { useTranslation } from "react-i18next";
+import { LoadingState } from "../../../components/common/LoadingState";
+import { ErrorState } from "../../../components/common/ErrorState";
 
 export default function OnboardingOverviewPage() {
+  const { t } = useTranslation();
   const { clientId = "" } = useParams();
   const setSelectedClient = useOnboardingStore((state) => state.setSelectedClient);
   const setActiveStep = useOnboardingStore((state) => state.setActiveStep);
@@ -23,11 +27,11 @@ export default function OnboardingOverviewPage() {
   }, [data?.currentStep, setActiveStep]);
 
   if (isLoading) {
-    return <p className="text-sm text-slate-500">Loading onboarding workflow...</p>;
+    return <LoadingState label={t("onboarding.loadingWorkflow")} />;
   }
 
   if (isError || !data) {
-    return <p className="text-sm text-red-600">Unable to load onboarding progress.</p>;
+    return <ErrorState title={t("onboarding.workflowError")} onRetry={() => window.location.reload()} />;
   }
 
   const currentStepIndex = workflowStepOrder.findIndex((step) => step === data.currentStep);
@@ -42,13 +46,13 @@ export default function OnboardingOverviewPage() {
           to={`/onboarding/${clientId}/step/${nextStep}`}
           className="inline-flex h-10 items-center justify-center rounded-md bg-blue-600 px-4 text-sm font-medium text-white transition hover:bg-blue-700"
         >
-          Continue current step
+          {t("onboarding.continueStep")}
         </Link>
         <Link
           to={`/clients/${clientId}`}
           className="inline-flex h-10 items-center justify-center rounded-md border border-slate-300 bg-white px-4 text-sm font-medium text-slate-700 transition hover:bg-slate-100"
         >
-          Back to client
+          {t("onboarding.backToClient")}
         </Link>
       </div>
     </div>

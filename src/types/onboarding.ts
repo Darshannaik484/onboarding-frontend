@@ -31,3 +31,24 @@ export interface ClientDetail {
   status: OnboardingStatus;
   progressPercent: number;
 }
+
+export interface OnboardingDocument {
+  id: string;
+  clientId: string;
+  stepKey: WorkflowStepKey;
+  fileName: string;
+  fileSize: number;
+  mimeType: string;
+  status: "uploading" | "uploaded" | "rejected";
+  uploadedAt: string;
+  rejectionReason?: string;
+}
+
+export interface UploadDocumentResponse {
+  document: OnboardingDocument;
+}
+
+export interface UploadProgressState {
+  progressPercent: number;
+  fileName: string;
+}

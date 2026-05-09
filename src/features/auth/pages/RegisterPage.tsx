@@ -76,7 +76,11 @@ export default function RegisterPage() {
               <p className="text-sm text-red-600">{t(errors.confirmPassword.message || "")}</p>
             )}
           </div>
-          {error && <p className="text-sm text-red-600">{t("auth.registerFailed")}</p>}
+          {error && (
+            <p className="text-sm text-red-600">
+              {(error as Error).message || t("auth.registerFailed")}
+            </p>
+          )}
           <Button className="w-full" type="submit" disabled={isPending}>
             {isPending ? t("common.loading") : t("auth.registerButton")}
           </Button>
