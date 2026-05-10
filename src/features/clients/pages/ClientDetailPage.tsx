@@ -1,4 +1,4 @@
-import { Link, useParams } from "react-router-dom";
+import { Link, useLocation, useParams } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { ErrorState } from "../../../components/common/ErrorState";
 import { LoadingState } from "../../../components/common/LoadingState";
@@ -10,9 +10,11 @@ import { useEffect } from "react";
 
 export default function ClientDetailPage() {
   const { t } = useTranslation();
+  const location = useLocation();
   const { clientId = "" } = useParams();
   const setSelectedClient = useOnboardingStore((state) => state.setSelectedClient);
   const { data, isLoading, isError } = useClientDetailQuery(clientId);
+  const createdClientName = (location.state as { createdClientName?: string } | null)?.createdClientName;
 
   useEffect(() => {
     setSelectedClient(clientId || null);
@@ -28,12 +30,22 @@ export default function ClientDetailPage() {
 
   return (
     <div className="space-y-6">
+      {createdClientName ? (
+        <div className="rounded-md border border-emerald-200 bg-emerald-50 px-3 py-2 text-sm text-emerald-700">
+          {t("client.createdSuccess", { name: createdClientName })}
+        </div>
+      ) : null}
+
       <Card>
         <CardHeader className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
           <CardTitle className="text-xl">{data.name}</CardTitle>
           <StatusBadge status={data.status} />
         </CardHeader>
-        <CardContent className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+        <CardContent className="grid gap-4 sm:grid-cols-2 lg:grid-cols-6">
+          <div>
+            <p className="text-xs text-slate-500">{t("client.contactPerson")}</p>
+            <p className="text-sm font-medium text-slate-900">{data.contactPerson}</p>
+          </div>
           <div>
             <p className="text-xs text-slate-500">{t("client.contactEmail")}</p>
             <p className="text-sm font-medium text-slate-900">{data.contactEmail}</p>
@@ -45,6 +57,10 @@ export default function ClientDetailPage() {
           <div>
             <p className="text-xs text-slate-500">{t("client.serviceTier")}</p>
             <p className="text-sm font-medium text-slate-900">{data.serviceTier}</p>
+          </div>
+          <div>
+            <p className="text-xs text-slate-500">{t("client.clientType")}</p>
+            <p className="text-sm font-medium text-slate-900">{data.clientType}</p>
           </div>
           <div>
             <p className="text-xs text-slate-500">{t("client.progress")}</p>

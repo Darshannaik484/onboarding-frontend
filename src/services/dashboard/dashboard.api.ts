@@ -1,7 +1,14 @@
 import api from "../../api/axios";
-import type { ActivityItem, ClientSummary, DashboardSummary } from "../../types/dashboard";
+import type {
+  ActivityItem,
+  ClientSummary,
+  CreateClientRequest,
+  DashboardSummary,
+} from "../../types/dashboard";
+import { getErrorMessage } from "../../utils/httpError";
 import { shouldUseMockApi } from "../apiMode";
 import {
+  mockCreateClient,
   mockGetDashboardActivity,
   mockGetDashboardClients,
   mockGetDashboardSummary,
@@ -34,5 +41,24 @@ export const getDashboardActivity = async () => {
   } catch (error) {
     if (shouldUseMockApi(error)) return mockGetDashboardActivity();
     throw error;
+  }
+};
+
+export const createClient = async (payload: CreateClientRequest) => {
+  if (shouldUseMockApi()) {
+    return mockCreateClient(payload);
+  }
+
+  try {
+    const response = await api.post<ClientSummary | { client: ClientSummary }>(
+      "/api/clients",
+      payload,
+    );
+    return "client" in response.data ? response.data.client : response.data;
+  } catch (error) {
+    if (shouldUseMockApi(error)) {
+      return mockCreateClient(payload);
+    }
+    throw new Error(getErrorMessage(error, "Unable to create client"), { cause: error });
   }
 };

@@ -1,6 +1,11 @@
 import type { AuthResponse, LoginRequest, RegisterRequest } from "../../types/auth";
 import type { ChatMessage, ChatRequest, ChatResponse } from "../../types/chatbot";
-import type { ActivityItem, ClientSummary, DashboardSummary } from "../../types/dashboard";
+import type {
+  ActivityItem,
+  ClientSummary,
+  CreateClientRequest,
+  DashboardSummary,
+} from "../../types/dashboard";
 import type {
   ClientDetail,
   OnboardingDocument,
@@ -16,19 +21,15 @@ const mockUser: AuthResponse = {
   user: { id: "u_demo_1", name: "Demo User", email: "demo@company.com" },
 };
 
-const mockSummary: DashboardSummary = {
-  totalClients: 3,
-  completedOnboarding: 1,
-  inProgressOnboarding: 1,
-  blockedOnboarding: 1,
-};
-
 const mockClients: ClientSummary[] = [
   {
     id: "client-001",
     name: "Acme Holdings",
+    contactPerson: "Anita Rao",
+    contactEmail: "anita.rao@acmeholdings.com",
     jurisdiction: "Singapore",
     serviceTier: "Enterprise",
+    clientType: "Corporate",
     status: "in_progress",
     progressPercent: 48,
     updatedAt: now,
@@ -36,8 +37,11 @@ const mockClients: ClientSummary[] = [
   {
     id: "client-002",
     name: "BluePeak Capital",
+    contactPerson: "Omar Khan",
+    contactEmail: "omar.khan@bluepeakcapital.com",
     jurisdiction: "UAE",
     serviceTier: "Professional",
+    clientType: "SME",
     status: "blocked",
     progressPercent: 62,
     updatedAt: now,
@@ -45,8 +49,11 @@ const mockClients: ClientSummary[] = [
   {
     id: "client-003",
     name: "Nexa Labs",
+    contactPerson: "Priya Menon",
+    contactEmail: "priya.menon@nexalabs.com",
     jurisdiction: "India",
     serviceTier: "Starter",
+    clientType: "Startup",
     status: "completed",
     progressPercent: 100,
     updatedAt: now,
@@ -112,8 +119,16 @@ const mockDocumentsByClient: Record<string, OnboardingDocument[]> = {
 };
 
 const mockChatByClientStep: Record<string, ChatMessage[]> = {};
+let mockClientSequence = 4;
 
 const wait = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
+
+const buildDashboardSummary = (): DashboardSummary => ({
+  totalClients: mockClients.length,
+  completedOnboarding: mockClients.filter((client) => client.status === "completed").length,
+  inProgressOnboarding: mockClients.filter((client) => client.status === "in_progress").length,
+  blockedOnboarding: mockClients.filter((client) => client.status === "blocked").length,
+});
 
 export const mockLogin = async (payload: LoginRequest) => {
   void payload;
@@ -129,7 +144,7 @@ export const mockRegister = async (payload: RegisterRequest) => {
 
 export const mockGetDashboardSummary = async () => {
   await wait(250);
-  return mockSummary;
+  return buildDashboardSummary();
 };
 
 export const mockGetDashboardClients = async () => {
@@ -148,9 +163,11 @@ export const mockGetClientDetail = async (clientId: string): Promise<ClientDetai
   return {
     id: client.id,
     name: client.name,
-    contactEmail: "ops@company.com",
+    contactPerson: client.contactPerson,
+    contactEmail: client.contactEmail,
     jurisdiction: client.jurisdiction,
     serviceTier: client.serviceTier,
+    clientType: client.clientType,
     status: client.status,
     progressPercent: client.progressPercent,
   };
@@ -194,6 +211,53 @@ export const mockUploadOnboardingDocument = async (
 
   mockDocumentsByClient[clientId] = [...(mockDocumentsByClient[clientId] || []), uploadedDoc];
   return { document: uploadedDoc };
+};
+
+export const mockCreateClient = async (payload: CreateClientRequest): Promise<ClientSummary> => {
+  await wait(350);
+
+  const clientId = `client-${String(mockClientSequence).padStart(3, "0")}`;
+  mockClientSequence += 1;
+
+  const createdClient: ClientSummary = {
+    id: clientId,
+    name: payload.companyName,
+    contactPerson: payload.contactPerson,
+    contactEmail: payload.email,
+    jurisdiction: payload.jurisdiction,
+    serviceTier: payload.serviceTier,
+    clientType: payload.clientType,
+    status: "pending",
+    progressPercent: 0,
+    updatedAt: new Date().toISOString(),
+  };
+
+  mockClients.unshift(createdClient);
+  mockProgressMap[clientId] = {
+    clientId,
+    progressPercent: 0,
+    currentStep: "identity",
+    overallStatus: "pending",
+    steps: [
+      { key: "identity", label: "Identity", description: "Pending", status: "current" },
+      {
+        key: "company_documents",
+        label: "Company Documents",
+        description: "Pending",
+        status: "pending",
+      },
+      {
+        key: "financial_documents",
+        label: "Financial Documents",
+        description: "Pending",
+        status: "pending",
+      },
+      { key: "compliance", label: "Compliance", description: "Pending", status: "pending" },
+      { key: "review", label: "Review", description: "Pending", status: "pending" },
+    ],
+  };
+
+  return createdClient;
 };
 
 export const mockGetChatMessages = async (clientId: string, stepKey: string): Promise<ChatMessage[]> => {

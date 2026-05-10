@@ -1,4 +1,4 @@
-import type { OnboardingStatus } from "./dashboard";
+import type { ClientType, OnboardingStatus, ServiceTier } from "./dashboard";
 
 export type WorkflowStepKey =
   | "identity"
@@ -25,9 +25,11 @@ export interface OnboardingProgress {
 export interface ClientDetail {
   id: string;
   name: string;
+  contactPerson: string;
   contactEmail: string;
   jurisdiction: string;
-  serviceTier: string;
+  serviceTier: ServiceTier;
+  clientType: ClientType;
   status: OnboardingStatus;
   progressPercent: number;
 }
