@@ -1,24 +1,40 @@
-import { Link } from "react-router-dom";
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { ActivityTimeline } from "../../../components/dashboard/ActivityTimeline";
 import { ClientSummaryCard } from "../../../components/dashboard/ClientSummaryCard";
 import { DashboardSummaryCards } from "../../../components/dashboard/DashboardSummaryCards";
+import { NewClientModal } from "../../../components/dashboard/NewClientModal";
 import { ErrorState } from "../../../components/common/ErrorState";
 import { LoadingState } from "../../../components/common/LoadingState";
 import { EmptyState } from "../../../components/common/EmptyState";
 import {
   useDashboardActivityQuery,
   useDashboardClientsQuery,
+  useCreateClientMutation,
   useDashboardSummaryQuery,
 } from "../hooks/useDashboardQueries";
 import { useTranslation } from "react-i18next";
+import { Button } from "../../../components/ui/button";
+import type { CreateClientFormValues } from "../createClient.schema";
 
 export default function DashboardPage() {
   const { t } = useTranslation();
+  const navigate = useNavigate();
+  const [isNewClientModalOpen, setIsNewClientModalOpen] = useState(false);
   const summaryQuery = useDashboardSummaryQuery();
   const clientsQuery = useDashboardClientsQuery();
   const activityQuery = useDashboardActivityQuery();
+  const createClientMutation = useCreateClientMutation();
   const isLoading = summaryQuery.isLoading || clientsQuery.isLoading || activityQuery.isLoading;
   const hasError = summaryQuery.isError || clientsQuery.isError || activityQuery.isError;
+
+  const handleCreateClient = async (values: CreateClientFormValues) => {
+    const createdClient = await createClientMutation.mutateAsync(values);
+    setIsNewClientModalOpen(false);
+    navigate(`/clients/${createdClient.id}`, {
+      state: { createdClientName: createdClient.name },
+    });
+  };
 
   if (isLoading) {
     return <LoadingState label={t("dashboard.loading")} />;
@@ -42,12 +58,12 @@ export default function DashboardPage() {
         <section className="space-y-4 xl:col-span-2">
           <div className="flex items-center justify-between">
             <h2 className="text-lg font-semibold text-slate-900">{t("dashboard.clients")}</h2>
-            <Link
-              to="/dashboard"
-              className="inline-flex h-10 items-center justify-center rounded-md border border-slate-300 bg-white px-4 text-sm font-medium text-slate-700 transition hover:bg-slate-100"
-            >
-              {t("common.refresh")}
-            </Link>
+            <div className="flex items-center gap-2">
+              <Button variant="outline" onClick={() => window.location.reload()}>
+                {t("common.refresh")}
+              </Button>
+              <Button onClick={() => setIsNewClientModalOpen(true)}>{t("dashboard.newClient")}</Button>
+            </div>
           </div>
           {clientsQuery.data.length === 0 ? (
             <EmptyState message={t("states.noData")} />
@@ -62,6 +78,14 @@ export default function DashboardPage() {
 
         <ActivityTimeline items={activityQuery.data} />
       </div>
+
+      <NewClientModal
+        open={isNewClientModalOpen}
+        onClose={() => setIsNewClientModalOpen(false)}
+        onSubmit={handleCreateClient}
+        isSubmitting={createClientMutation.isPending}
+        errorMessage={createClientMutation.error ? (createClientMutation.error as Error).message : undefined}
+      />
     </div>
   );
 }
