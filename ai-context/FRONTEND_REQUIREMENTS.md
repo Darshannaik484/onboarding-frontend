@@ -2,119 +2,69 @@
 
 ## Objective
 
-Build the complete user-facing frontend for the AI-native onboarding system.
+Deliver a production-ready frontend for AI-assisted client onboarding with clear workflows, strong validation, and professional UX.
 
-## Pages to Build
+## Product Scope
 
 ### Authentication
 
-- Login page
-- Register page
-
-### Onboarding Flow
-
-- Client creation page
-- Step-by-step onboarding page
-- Document upload page
-- Workflow review page
-- Completion page
+- Login
+- Register
+- Protected route handling
 
 ### Dashboard
 
-- Client dashboard
+- Summary metrics
+- Client list and status visibility
+- Activity timeline
+- Client creation entry point
+
+### Client and Workflow
+
 - Client detail page
-- Onboarding progress view
-- Recent activity view
-- Status summary cards
+- Workflow overview page
+- Step-by-step onboarding pages
+- Clear progress and status states
 
-### AI Assistant
+### Document Handling
 
-- Chat window
+- Upload with validation (type/size)
+- Upload progress feedback
+- Uploaded document list by step
+- Validation and rejection messaging
+
+### AI Assistance
+
+- Context-aware chatbot per client step
 - Suggested prompts
-- Context-aware replies
-- Error explanation messages
+- Typing/loading feedback
 
-### Settings
+### Localization
 
-- Language switcher
-- Basic UI preferences
+- English, Hindi, Spanish
+- Translation-key based UI strings
 
-## Main UI Features
+## Non-Functional Requirements
 
-### 1. Login and Register
-
-- Email and password form
-- Validation messages
-- Loading state
-- Error handling
-- Redirect after success
-
-### 2. Dashboard
-
-- Show onboarding progress
-- Show client status: pending, in progress, blocked, completed
-- Show document status
-- Show recent events and updates
-- Show summary cards
-
-### 3. Workflow UI
-
-- Step 1: Identity
-- Step 2: Company Documents
-- Step 3: Financial
-- Step 4: Compliance
-- Step 5: Complete
-- Highlight current step
-- Show completed steps
-- Show blocked steps clearly
-
-### 4. Document Upload
-
-- Upload card or drag-and-drop area
-- File type and size validation
-- Upload progress indicator
-- Uploaded file list
-- File status display
-- Error messages for invalid files
-
-### 5. AI Chatbot
-
-- Floating or side-panel chatbot
-- Ask questions like:
-  - what do I upload next?
-  - why was my document rejected?
-  - what is blocking onboarding?
-- Show suggested questions
-- Show AI responses in a chat layout
-
-### 6. Multilingual Support
-
-- English default
-- Hindi support
-- Spanish support
-- All labels, buttons, headings, and messages must be translatable
-
-## Data and State Requirements
-
-- Use global auth state
-- Use onboarding state for workflow progress
-- Use dashboard state for client summary
-- Use local state for form inputs
-- Use API state for server responses
+- Mobile-first responsive layout
+- Clear loading/empty/error states
+- Reusable component-driven UI
+- Typed requests/responses and state
+- API integration through gateway only
+- Maintainable feature-based architecture
 
 ## UX Requirements
 
-- Clean and professional layout
-- Easy navigation
-- Visible progress tracking
-- Clear call-to-action buttons
-- Helpful empty states
-- Friendly error messages
-- Fully responsive layout
+- Simple and predictable navigation
+- Strong visual hierarchy
+- Explicit CTA labels
+- Fast feedback on user actions
+- Friendly error messaging
 
-## API Behavior
+## Frontend Delivery Checklist
 
-- Get data only from API Gateway
-- Do not mock final backend logic inside UI components
-- Use typed request/response structures
-- Handle loading and failure cases properly
+- [ ] All page-level states (loading/empty/error) implemented
+- [ ] All text externalized to i18n keys
+- [ ] Mutations provide success/failure feedback
+- [ ] API interactions typed and centralized
+- [ ] Route guards and auth flows validated

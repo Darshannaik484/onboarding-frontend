@@ -1,56 +1,52 @@
 # Project Rules
 
-## General Rules
+## Core Stack
 
-- Use React + TypeScript only
-- Use Vite as the build tool
-- Use TailwindCSS for styling
-- Use shadcn/ui for UI components
-- Use React Router for navigation
-- Use Zustand for global state
-- Use React Query for server state
-- Use Axios for API calls
-- Use react-hook-form + Zod for forms and validation
-- Use react-i18next for language support
-- Use Framer Motion for subtle animations
+- React + TypeScript
+- Vite
+- Tailwind CSS
+- React Router
+- Zustand
+- React Query
+- Axios
+- react-hook-form + Zod
+- react-i18next
+- Framer Motion
 
 ## Architecture Rules
 
-- Keep business logic outside UI components
-- Keep API calls inside `src/api` or `src/services`
-- Keep reusable UI elements inside `src/components`
-- Keep page-level screens inside `src/features`
-- Keep global state inside `src/store`
-- Keep route definitions inside `src/routes`
-- Keep utility functions inside `src/utils`
+- Keep business logic out of presentational components.
+- Keep API calls in `src/api` and `src/services`.
+- Keep reusable UI components in `src/components`.
+- Keep page-level behavior in `src/features/**/pages`.
+- Keep global state in `src/store`.
+- Keep shared types in `src/types`.
 
-## UI Rules
+## UI and UX Rules
 
-- Build mobile-first responsive screens
-- Use consistent spacing and typography
-- Show loading, empty, and error states
-- Use clear progress indicators
-- Use status badges for workflow states
-- Keep the interface simple and user-friendly
+- Build mobile-first responsive interfaces.
+- Use consistent spacing, typography, and visual hierarchy.
+- Always provide loading, empty, and error states.
+- Use status indicators for onboarding progression.
+- Prefer reusable UI primitives before creating new ones.
 
-## Integration Rules
+## API and Integration Rules
 
-- Frontend must communicate only through API Gateway
-- Do not call backend services directly from components
-- Use environment variables for base URLs
-- Do not hardcode API endpoints in UI files
+- Frontend communicates through API Gateway only.
+- Never hardcode environment-specific API URLs in components.
+- Use typed payloads and responses.
+- Handle network and validation failures gracefully.
 
-## Language Rules
+## Internationalization Rules
 
-- All visible UI text must use translation keys
-- Support at least English, Hindi, and Spanish
-- Language switching must be available in the UI
+- All visible user-facing text should use translation keys.
+- Maintain English/Hindi/Spanish compatibility.
+- Do not introduce untranslatable UI text in feature screens.
 
-## Code Quality Rules
+## Quality Rules
 
-- Use modular components
-- Use descriptive names
-- Avoid duplicated logic
-- Avoid giant files
-- Use clean imports
-- Use type-safe interfaces
+- Keep files focused and composable.
+- Avoid duplicated logic.
+- Use clear naming conventions.
+- Prefer small, reviewable pull requests.
+- Validate with project scripts before PR updates.
