@@ -4,6 +4,10 @@ A production-focused React frontend for managing client onboarding workflows, do
 
 ## Project Overview
 
+Test  credentials:
+- username: testuser@gmail.com
+- password: Test@123
+
 This application provides the user-facing interface for an onboarding platform where teams can:
 
 - authenticate users
