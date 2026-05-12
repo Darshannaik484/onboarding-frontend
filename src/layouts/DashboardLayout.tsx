@@ -1,5 +1,5 @@
 import { LogOut } from "lucide-react";
-import { Link, Outlet, useNavigate } from "react-router-dom";
+import { Outlet, useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { LanguageSwitcher } from "../components/common/LanguageSwitcher";
 import { Button } from "../components/ui/button";
@@ -20,19 +20,12 @@ export default function DashboardLayout() {
   return (
     <div className="min-h-screen bg-slate-50">
       <header className="border-b border-slate-200 bg-white">
-        <div className="mx-auto flex w-full max-w-6xl items-center justify-between px-4 py-3 sm:px-6">
-          <div className="flex items-center gap-6">
-            <div>
-              <p className="text-sm text-slate-500">{t("layout.platformName")}</p>
-              <h1 className="text-lg font-semibold text-slate-900">{t("layout.dashboard")}</h1>
-            </div>
-            <nav className="hidden items-center gap-4 text-sm text-slate-600 md:flex">
-              <Link to="/dashboard" className="transition hover:text-slate-900">
-                {t("layout.dashboard")}
-              </Link>
-            </nav>
+        <div className="mx-auto flex w-full max-w-6xl items-center justify-between px-4 py-4 sm:px-6">
+          <div className="space-y-0.5">
+            <p className="text-sm text-slate-500">{t("layout.platformName")}</p>
+            <h1 className="text-lg font-semibold text-slate-900">{t("layout.dashboard")}</h1>
           </div>
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-2 sm:gap-3">
             {isDemoModeEnabled ? (
               <span className="hidden rounded-full bg-amber-100 px-2 py-1 text-xs font-medium text-amber-700 sm:inline-flex">
                 {t("common.demoMode")}
