@@ -4,7 +4,7 @@ A production-focused React frontend for managing client onboarding workflows, do
 
 ## Project Overview
 
-Test  credentials:
+Login  credentials:
 - username: testuser@gmail.com
 - password: Test@123
 
