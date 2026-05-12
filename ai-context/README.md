@@ -1,73 +1,39 @@
-# AI-Native Onboarding Frontend
+# AI Context Documentation
 
-This is the frontend for an AI-native client onboarding platform.
+This directory contains implementation context for contributors and coding agents.
 
 ## Purpose
 
-Build a React-based user interface for:
+Use these documents to quickly understand:
 
-- login and registration
-- client onboarding
-- document upload
-- workflow progress tracking
-- AI chatbot assistance
-- dashboard monitoring
-- multilingual support
+- product expectations
+- architecture decisions
+- API boundaries
+- state and component ownership
+- UI and workflow behavior
+- delivery rules for frontend changes
 
-## Tech Stack
+## Document Index
 
-- React
-- TypeScript
-- Vite
-- TailwindCSS
-- shadcn/ui
-- React Router
-- Zustand
-- React Query
-- Axios
-- react-hook-form
-- Zod
-- react-i18next
-- Framer Motion
+- `FRONTEND_REQUIREMENTS.md` — product and feature requirements
+- `PROJECT_RULES.md` — engineering and architecture rules
+- `DESIGN_SYSTEM.md` — UI style guidelines and interaction principles
+- `API_CONTRACTS.md` — API endpoint reference used by frontend services
+- `STATE_ARCHITECTURE.md` — state management design (Zustand + React Query)
+- `COMPONENT_ARCHITECTURE.md` — component structure and ownership
+- `UI_FLOW.md` — end-to-end user and screen flows
+- `CLAUDE_INSTRUCTIONS.md` — agent-specific execution expectations
+- `TODO.md` — prioritized improvement backlog
 
-## Backend Integration
+## How to Use This Folder
 
-The frontend communicates only through the API Gateway.
+1. Start with `FRONTEND_REQUIREMENTS.md` and `PROJECT_RULES.md`.
+2. Verify implementation boundaries in `API_CONTRACTS.md`.
+3. Follow architecture references (`STATE_ARCHITECTURE.md`, `COMPONENT_ARCHITECTURE.md`).
+4. Validate UX behavior against `UI_FLOW.md` and `DESIGN_SYSTEM.md`.
+5. Track outstanding work in `TODO.md`.
 
-Gateway URL:
+## Source of Truth Notes
 
-- `http://localhost:4000`
-
-Main services:
-
-- Onboarding service: `3002`
-- Dashboard service: `3000`
-- Gateway: `4000`
-
-## Frontend Goals
-
-- Clean and professional UI
-- Responsive design
-- Reusable components
-- Modular file structure
-- Loading and error states
-- Multi-language support
-- Smooth onboarding workflow
-
-## Core Screens
-
-- Login
-- Register
-- Dashboard
-- Client onboarding
-- Document upload
-- AI chatbot
-- Settings / language switcher
-
-## Development Rules
-
-- Keep UI logic separate from API logic
-- Use TypeScript everywhere
-- Use reusable components
-- Do not hardcode backend data
-- Use translations for all UI text
+- Runtime/frontend behavior should always be verified against source code.
+- If documentation and code diverge, update docs in the same PR that resolves the mismatch.

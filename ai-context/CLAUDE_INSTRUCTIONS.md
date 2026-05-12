@@ -1,115 +1,45 @@
-# Claude Instructions
+# Agent Implementation Instructions
 
-You are a senior frontend architect and React UI engineer.
+Use this guide when acting as a coding agent or implementation assistant for this repository.
 
-Your task is to generate a complete, production-ready frontend application for the AI-native onboarding platform.
+## Mission
 
-## Context
+Implement production-quality frontend changes while preserving existing architecture, typing, and workflow behavior.
 
-This frontend is part of a larger multi-service system. The frontend must connect to backend APIs through the API Gateway only.
+## Required Context First
 
-Gateway base URL:
+Before coding:
 
-- `http://localhost:4000`
+1. Read `README.md`.
+2. Read `ai-context/PROJECT_RULES.md`.
+3. Validate relevant feature flows in `ai-context/UI_FLOW.md`.
+4. Verify API usage in `ai-context/API_CONTRACTS.md`.
 
-## Your Responsibilities
+## Implementation Principles
 
-Build all user-facing screens and components, including:
+- Keep changes scoped and intentional.
+- Reuse existing components and hooks.
+- Keep API logic in service/API layers.
+- Keep UI text translation-ready.
+- Respect feature/module boundaries.
 
-- login
-- register
-- client dashboard
-- onboarding workflow
-- document upload interface
-- AI chatbot interface
-- language switcher
-- reusable layout components
-- routing
-- API integration
-- global state handling
-- loading and error states
+## Engineering Expectations
 
-## Technical Requirements
+- Type-safe code only.
+- No hardcoded backend URLs in UI components.
+- Strong loading/error/empty state handling.
+- Responsive behavior preserved.
+- Accessibility and keyboard interactions considered.
 
-Use:
+## Validation Expectations
 
-- React
-- TypeScript
-- Vite
-- TailwindCSS
-- shadcn/ui
-- React Router
-- Zustand
-- React Query
-- Axios
-- react-hook-form
-- Zod
-- react-i18next
-- Framer Motion
+- Run project build and lint commands before finalizing work.
+- Call out pre-existing unrelated failures if present.
+- Avoid introducing unrelated refactors in focused tasks.
 
-## Architecture Requirements
+## Output Expectations for Agent PRs
 
-- Use modular file structure
-- Keep pages, components, hooks, services, and stores separate
-- Avoid huge single-file components
-- Use reusable UI components
-- Keep API logic outside UI components
-- Use strongly typed interfaces and types
-- Use environment variables for configuration
-
-## UI Requirements
-
-- Build a clean, modern, enterprise-style interface
-- Make it mobile responsive
-- Use clear onboarding progress indicators
-- Show document upload status
-- Show validation feedback
-- Show client status cards
-- Show chatbot responses clearly
-- Support English, Hindi, and Spanish
-
-## Functional Requirements
-
-- Auth screens with validation
-- Protected routes
-- Onboarding workflow steps
-- Document upload with status tracking
-- Dashboard with progress summary
-- AI chatbot panel
-- Language switching
-- API integration through gateway
-- Loading, empty, and error states
-
-## Important Rules
-
-- Do not generate random architecture
-- Do not place all logic inside App.tsx
-- Do not call services directly from components
-- Do not hardcode API URLs
-- Do not skip translation support
-- Do not use placeholder-only code
-- Do not break the existing folder structure
-
-## Output Expectations
-
-Generate:
-
-- full folder-aware React code
-- reusable components
-- API service files
-- hooks
-- store files
-- route setup
-- i18n setup
-- page components
-- utility functions
-- type definitions
-
-## Working Style
-
-- Read the provided markdown files first
-- Respect the project rules
-- Preserve existing files where possible
-- Modify files intelligently
-- Write clean, production-ready code
-- Make the application actually usable
+- Clear summary of what changed
+- Affected files and rationale
+- Validation results
+- Risks/limitations, if any

@@ -1,87 +1,57 @@
 # Component Architecture
 
-## Common Components
+## Component Layers
 
-Located in:
-src/components/common
+### 1) UI Primitives (`src/components/ui`)
 
-Components:
+Low-level reusable building blocks:
 
-- Button
-- Input
-- Modal
-- Loader
-- StatusBadge
+- button
+- input
+- card
+- badge
+- progress
+- table
+- skeleton
+
+### 2) Shared Components (`src/components/common`)
+
+Cross-feature components:
+
+- LoadingState
+- ErrorState
 - EmptyState
+- StatusBadge
+- LanguageSwitcher
+- Modal wrappers
 
-Reusable across the application.
+### 3) Feature Components
 
----
+Located under:
 
-# Layout Components
+- `src/components/dashboard`
+- `src/components/onboarding`
+- `src/components/chatbot`
 
-Located in:
-src/components/layout
+These compose UI primitives and shared components into domain-specific sections.
 
-Components:
+### 4) Feature Pages (`src/features/**/pages`)
 
-- Sidebar
-- Topbar
-- AppShell
-- PageHeader
+Page-level orchestration:
 
-Responsible for global layout structure.
+- trigger data hooks
+- compose sections
+- manage page-specific interactions
 
----
+## Component Responsibilities
 
-# Onboarding Components
+- **Presentation components**: render UI only
+- **Hooks/services**: own data and side effects
+- **Pages/layouts**: coordinate feature-level behavior
 
-Located in:
-src/components/onboarding
+## Composition Rules
 
-Components:
-
-- WorkflowStepper
-- ChecklistPanel
-- ProgressCard
-- DocumentUploadCard
-- DocumentList
-- ValidationAlert
-
----
-
-# Dashboard Components
-
-Located in:
-src/components/dashboard
-
-Components:
-
-- DashboardStats
-- ClientSummaryCard
-- ActivityTimeline
-- ServiceHealthCard
-
----
-
-# Chatbot Components
-
-Located in:
-src/components/chatbot
-
-Components:
-
-- ChatWindow
-- ChatMessage
-- ChatInput
-- SuggestedPrompts
-
----
-
-# Component Rules
-
-- Keep components small and reusable
-- Avoid business logic inside UI components
-- Use props and hooks cleanly
-- Keep styles consistent
-- Use TypeScript props interfaces
+- Prefer composition over duplication.
+- Keep props typed and minimal.
+- Keep feature-specific markup out of primitive UI components.
+- Keep shared states and messaging patterns consistent across pages.

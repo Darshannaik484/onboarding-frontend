@@ -1,120 +1,67 @@
 # Design System
 
-## UI Style
+## Design Goals
 
-Modern enterprise SaaS interface.
+- Clean
+- Professional
+- Minimal
+- Enterprise-friendly
+- Accessible and responsive
 
-Clean, minimal, and professional.
+## Visual Foundations
 
----
+### Color Intent
 
-# Colors
+- **Primary**: action and progress emphasis
+- **Neutral**: layout, typography, surfaces
+- **Success/Warning/Error**: status communication
 
-Primary:
-#2563EB
+### Typography
 
-Secondary:
-#0F172A
+- Base font: Inter/system sans-serif
+- Clear heading scale for section hierarchy
+- Body text optimized for readability
 
-Success:
-#16A34A
+### Spacing and Layout
 
-Warning:
-#F59E0B
+- Card-based composition
+- Consistent paddings/margins across sections
+- Mobile-first breakpoints with progressive enhancement
 
-Danger:
-#DC2626
+## Component Styling Guidelines
 
-Background:
-#F8FAFC
+### Buttons
 
-Card Background:
-#FFFFFF
+- Primary, outline, and ghost patterns
+- Consistent height and corner radius
+- Clear hover/focus-visible states
 
----
+### Cards
 
-# Typography
-
-Font:
-Inter
-
-Headings:
-
-- Bold
-- Clear hierarchy
-
-Body:
-
-- Readable
-- Medium contrast
-
----
-
-# Layout Rules
-
-- Mobile-first responsive design
-- Sidebar for desktop
-- Collapsible navigation
-- Top navigation bar
-- Card-based layouts
-
----
-
-# Components
-
-Buttons:
-
+- Soft border and subtle shadow
 - Rounded corners
-- Consistent padding
-- Primary and secondary variants
+- Consistent internal spacing
 
-Cards:
+### Inputs and Forms
 
-- Soft shadow
-- Rounded edges
-- Consistent spacing
+- Explicit labels
+- Clear validation errors
+- Focus ring and keyboard accessibility support
 
-Inputs:
+## Interaction Guidelines
 
-- Clear labels
-- Validation states
-- Error messages
+- Use subtle transitions for hover/focus/state changes
+- Prefer small Framer Motion transitions for screen sections
+- Keep animation durations short and non-distracting
 
----
+## Status and Feedback
 
-# Dashboard UI
+- Loading states: skeleton/spinner with contextual labels
+- Empty states: concise explanation + CTA when possible
+- Error states: clear cause + retry action when available
 
-- Progress cards
-- Status badges
-- Activity timeline
-- Statistics overview
+## Workflow-Specific UI Guidance
 
----
-
-# Upload UI
-
-- Drag-and-drop upload area
-- Upload progress bar
-- File preview cards
-- Validation alerts
-
----
-
-# Chatbot UI
-
-- Floating assistant panel
-- Chat bubble layout
-- Suggested prompts
-- Scrollable messages
-
----
-
-# Animation Rules
-
-Use subtle animations only:
-
-- fade
-- slide
-- hover effects
-
-Use Framer Motion carefully.
+- Onboarding stepper should clearly show: pending, current, blocked, completed
+- Upload UI should provide file constraints and progress feedback
+- Chat UI should separate user vs assistant messages clearly

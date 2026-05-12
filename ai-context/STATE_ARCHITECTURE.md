@@ -1,86 +1,52 @@
 # State Architecture
 
-## State Management
+## State Strategy
 
-Use:
+Use the right state tool for the right responsibility:
 
-- Zustand for global UI/application state
-- React Query for server state
-- Local component state for form inputs
+- **Zustand**: app-level client state
+- **React Query**: server state and async lifecycle
+- **Local component state**: transient UI interactions
 
----
+## Zustand Stores
 
-# Auth Store
+### `src/store/auth.store.ts`
 
-File:
-src/store/auth.store.ts
+- token/user persistence
+- auth hydration
+- login session state
+- logout/reset behavior
 
-Responsibilities:
+### `src/store/onboarding.store.ts`
 
-- user data
-- auth token
-- login/logout
-- authentication state
+- selected client/step
+- upload progress feedback
+- workflow validation messaging
 
----
+### `src/store/chatbot.store.ts`
 
-# Onboarding Store
+- chat draft message
+- suggested prompts state
 
-File:
-src/store/onboarding.store.ts
+### `src/store/ui.store.ts` (if used)
 
-Responsibilities:
+- app-wide presentation flags (modals, layout controls, notifications)
 
-- workflow progress
-- uploaded documents
-- onboarding status
-- current onboarding step
+## React Query Responsibilities
 
----
+- data fetching
+- cache management
+- retry/error lifecycle
+- mutation and cache invalidation
 
-# Dashboard Store
+## State Boundaries
 
-File:
-src/store/dashboard.store.ts
+- Keep remote/server data in React Query.
+- Keep cross-page UI/session state in Zustand.
+- Avoid mirroring React Query data in global store unless required.
 
-Responsibilities:
+## Recommended Patterns
 
-- dashboard summary
-- client list
-- activity data
-
----
-
-# UI Store
-
-File:
-src/store/ui.store.ts
-
-Responsibilities:
-
-- sidebar state
-- modal state
-- loading indicators
-- notifications
-
----
-
-# React Query Usage
-
-Use React Query for:
-
-- API requests
-- caching
-- retries
-- loading states
-- synchronization
-
----
-
-# State Rules
-
-- Keep API state separate from UI state
-- Avoid prop drilling
-- Use typed stores
-- Keep stores modular
-- Avoid putting everything in one store
+- Derive UI from query state (`isLoading`, `isError`, `data`)
+- Use feature hooks to encapsulate query/mutation config
+- Keep selectors narrow to reduce unnecessary re-renders
