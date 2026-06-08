@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "../../../components/ui/card";
 import { Input } from "../../../components/ui/input";
 import { Label } from "../../../components/ui/label";
@@ -13,18 +13,13 @@ export default function FieldCorrectionPage() {
   const [values, setValues] = useState<Record<string, string>>({});
   const [saved, setSaved] = useState(false);
 
-  useEffect(() => {
-    if (data.length > 0) {
-      const nextValues = data.reduce<Record<string, string>>((acc, item) => {
-        acc[item.id] = item.correctedValue;
-        return acc;
-      }, {});
-      setValues(nextValues);
-    }
-  }, [data]);
-
   const hasValidationIssues = useMemo(
-    () => data.some((item) => item.validationMessage && values[item.id].trim().length === 0),
+    () =>
+      data.some(
+        (item) =>
+          item.validationMessage &&
+          (values[item.id] ?? item.correctedValue).trim().length === 0,
+      ),
     [data, values],
   );
 
@@ -45,7 +40,7 @@ export default function FieldCorrectionPage() {
               <Label>{field.fieldName}</Label>
               <p className="text-xs text-slate-500">Current value: {field.currentValue}</p>
               <Input
-                value={values[field.id] ?? ""}
+                value={values[field.id] ?? field.correctedValue}
                 onChange={(event) => {
                   setSaved(false);
                   setValues((prev) => ({ ...prev, [field.id]: event.target.value }));
