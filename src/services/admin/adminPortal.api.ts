@@ -1,3 +1,5 @@
+import api from "../../api/axios";
+import { shouldUseMockApi } from "../apiMode";
 import type {
   AnalyticsData,
   CorrectionField,
@@ -11,7 +13,7 @@ import type {
 
 const wait = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 
-export const getHumanReviewDashboard = async (): Promise<HumanReviewDashboardData> => {
+const getHumanReviewDashboardMock = async (): Promise<HumanReviewDashboardData> => {
   await wait(150);
   return {
     metrics: [
@@ -37,7 +39,7 @@ export const getHumanReviewDashboard = async (): Promise<HumanReviewDashboardDat
   };
 };
 
-export const getReviewQueue = async (): Promise<ReviewQueueItem[]> => {
+const getReviewQueueMock = async (): Promise<ReviewQueueItem[]> => {
   await wait(170);
   return [
     {
@@ -67,7 +69,7 @@ export const getReviewQueue = async (): Promise<ReviewQueueItem[]> => {
   ];
 };
 
-export const getCorrectionFields = async (): Promise<CorrectionField[]> => {
+const getCorrectionFieldsMock = async (): Promise<CorrectionField[]> => {
   await wait(120);
   return [
     {
@@ -87,7 +89,7 @@ export const getCorrectionFields = async (): Promise<CorrectionField[]> => {
   ];
 };
 
-export const getReconciliationItems = async (): Promise<ReconciliationItem[]> => {
+const getReconciliationItemsMock = async (): Promise<ReconciliationItem[]> => {
   await wait(140);
   return [
     {
@@ -107,7 +109,7 @@ export const getReconciliationItems = async (): Promise<ReconciliationItem[]> =>
   ];
 };
 
-export const getCrmSyncItems = async (): Promise<CrmSyncItem[]> => {
+const getCrmSyncItemsMock = async (): Promise<CrmSyncItem[]> => {
   await wait(130);
   return [
     {
@@ -126,7 +128,7 @@ export const getCrmSyncItems = async (): Promise<CrmSyncItem[]> => {
   ];
 };
 
-export const getSlaMetrics = async (): Promise<SlaMetric[]> => {
+const getSlaMetricsMock = async (): Promise<SlaMetric[]> => {
   await wait(130);
   return [
     { id: "sla1", metricName: "Initial Review", target: "< 2h", current: "1h 37m", status: "healthy" },
@@ -135,7 +137,7 @@ export const getSlaMetrics = async (): Promise<SlaMetric[]> => {
   ];
 };
 
-export const getEscalationCases = async (): Promise<EscalationCase[]> => {
+const getEscalationCasesMock = async (): Promise<EscalationCase[]> => {
   await wait(120);
   return [
     {
@@ -155,7 +157,7 @@ export const getEscalationCases = async (): Promise<EscalationCase[]> => {
   ];
 };
 
-export const getAnalyticsData = async (): Promise<AnalyticsData> => {
+const getAnalyticsDataMock = async (): Promise<AnalyticsData> => {
   await wait(180);
   return {
     kpis: [
@@ -182,3 +184,84 @@ export const getAnalyticsData = async (): Promise<AnalyticsData> => {
     ],
   };
 };
+
+const withFallback = async <T>(request: () => Promise<T>, fallback: () => Promise<T>) => {
+  try {
+    return await request();
+  } catch (error) {
+    if (shouldUseMockApi(error)) return fallback();
+    throw error;
+  }
+};
+
+export const getHumanReviewDashboard = async (): Promise<HumanReviewDashboardData> =>
+  withFallback(
+    async () => {
+      const response = await api.get<HumanReviewDashboardData>("/api/portal/admin/dashboard");
+      return response.data;
+    },
+    getHumanReviewDashboardMock,
+  );
+
+export const getReviewQueue = async (): Promise<ReviewQueueItem[]> =>
+  withFallback(
+    async () => {
+      const response = await api.get<ReviewQueueItem[]>("/api/portal/admin/review-queue");
+      return response.data;
+    },
+    getReviewQueueMock,
+  );
+
+export const getCorrectionFields = async (): Promise<CorrectionField[]> =>
+  withFallback(
+    async () => {
+      const response = await api.get<CorrectionField[]>("/api/portal/admin/field-corrections");
+      return response.data;
+    },
+    getCorrectionFieldsMock,
+  );
+
+export const getReconciliationItems = async (): Promise<ReconciliationItem[]> =>
+  withFallback(
+    async () => {
+      const response = await api.get<ReconciliationItem[]>("/api/portal/admin/reconciliation");
+      return response.data;
+    },
+    getReconciliationItemsMock,
+  );
+
+export const getCrmSyncItems = async (): Promise<CrmSyncItem[]> =>
+  withFallback(
+    async () => {
+      const response = await api.get<CrmSyncItem[]>("/api/portal/admin/crm-sync");
+      return response.data;
+    },
+    getCrmSyncItemsMock,
+  );
+
+export const getSlaMetrics = async (): Promise<SlaMetric[]> =>
+  withFallback(
+    async () => {
+      const response = await api.get<SlaMetric[]>("/api/portal/admin/sla-monitoring");
+      return response.data;
+    },
+    getSlaMetricsMock,
+  );
+
+export const getEscalationCases = async (): Promise<EscalationCase[]> =>
+  withFallback(
+    async () => {
+      const response = await api.get<EscalationCase[]>("/api/portal/admin/escalations");
+      return response.data;
+    },
+    getEscalationCasesMock,
+  );
+
+export const getAnalyticsData = async (): Promise<AnalyticsData> =>
+  withFallback(
+    async () => {
+      const response = await api.get<AnalyticsData>("/api/portal/admin/analytics");
+      return response.data;
+    },
+    getAnalyticsDataMock,
+  );

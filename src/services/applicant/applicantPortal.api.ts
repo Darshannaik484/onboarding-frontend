@@ -1,3 +1,5 @@
+import api from "../../api/axios";
+import { shouldUseMockApi } from "../apiMode";
 import type {
   ApplicantDashboardData,
   DocumentStatusItem,
@@ -11,7 +13,7 @@ import type {
 
 const wait = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 
-export const getApplicantDashboard = async (): Promise<ApplicantDashboardData> => {
+const getApplicantDashboardMock = async (): Promise<ApplicantDashboardData> => {
   await wait(180);
   return {
     metrics: [
@@ -48,7 +50,7 @@ export const getApplicantDashboard = async (): Promise<ApplicantDashboardData> =
   };
 };
 
-export const getOcrResults = async (): Promise<OcrFieldResult[]> => {
+const getOcrResultsMock = async (): Promise<OcrFieldResult[]> => {
   await wait(140);
   return [
     { id: "f1", fieldName: "Full Name", extractedValue: "Aarav Sharma", confidenceScore: 98 },
@@ -69,7 +71,7 @@ export const getOcrResults = async (): Promise<OcrFieldResult[]> => {
   ];
 };
 
-export const getDocumentStatuses = async (): Promise<DocumentStatusItem[]> => {
+const getDocumentStatusesMock = async (): Promise<DocumentStatusItem[]> => {
   await wait(140);
   return [
     { id: "d1", documentName: "Passport", status: "approved", updatedAt: "2026-06-07T12:20:00.000Z" },
@@ -89,7 +91,7 @@ export const getDocumentStatuses = async (): Promise<DocumentStatusItem[]> => {
   ];
 };
 
-export const getValidationResults = async (): Promise<ValidationResultItem[]> => {
+const getValidationResultsMock = async (): Promise<ValidationResultItem[]> => {
   await wait(160);
   return [
     { id: "v1", fieldName: "Date of Birth", status: "valid" },
@@ -110,7 +112,7 @@ export const getValidationResults = async (): Promise<ValidationResultItem[]> =>
   ];
 };
 
-export const getUploadTracking = async (): Promise<UploadTrackingItem[]> => {
+const getUploadTrackingMock = async (): Promise<UploadTrackingItem[]> => {
   await wait(120);
   return [
     { id: "u1", fileName: "passport.pdf", progressPercent: 100, state: "success" },
@@ -119,7 +121,7 @@ export const getUploadTracking = async (): Promise<UploadTrackingItem[]> => {
   ];
 };
 
-export const getReuploadDocuments = async (): Promise<ReuploadDocument[]> => {
+const getReuploadDocumentsMock = async (): Promise<ReuploadDocument[]> => {
   await wait(160);
   return [
     {
@@ -135,7 +137,7 @@ export const getReuploadDocuments = async (): Promise<ReuploadDocument[]> => {
   ];
 };
 
-export const getKycStages = async (): Promise<KycStage[]> => {
+const getKycStagesMock = async (): Promise<KycStage[]> => {
   await wait(120);
   return [
     { id: "k1", stageName: "Identity Verification", status: "completed", completedAt: "2026-06-05" },
@@ -145,7 +147,7 @@ export const getKycStages = async (): Promise<KycStage[]> => {
   ];
 };
 
-export const getFaceVerification = async (): Promise<FaceVerificationState> => {
+const getFaceVerificationMock = async (): Promise<FaceVerificationState> => {
   await wait(100);
   return {
     status: "not_started",
@@ -153,3 +155,84 @@ export const getFaceVerification = async (): Promise<FaceVerificationState> => {
     message: "Ready to capture a live selfie for verification.",
   };
 };
+
+const withFallback = async <T>(request: () => Promise<T>, fallback: () => Promise<T>) => {
+  try {
+    return await request();
+  } catch (error) {
+    if (shouldUseMockApi(error)) return fallback();
+    throw error;
+  }
+};
+
+export const getApplicantDashboard = async (): Promise<ApplicantDashboardData> =>
+  withFallback(
+    async () => {
+      const response = await api.get<ApplicantDashboardData>("/api/portal/applicant/dashboard");
+      return response.data;
+    },
+    getApplicantDashboardMock,
+  );
+
+export const getOcrResults = async (): Promise<OcrFieldResult[]> =>
+  withFallback(
+    async () => {
+      const response = await api.get<OcrFieldResult[]>("/api/portal/applicant/ocr-results");
+      return response.data;
+    },
+    getOcrResultsMock,
+  );
+
+export const getDocumentStatuses = async (): Promise<DocumentStatusItem[]> =>
+  withFallback(
+    async () => {
+      const response = await api.get<DocumentStatusItem[]>("/api/portal/applicant/document-status");
+      return response.data;
+    },
+    getDocumentStatusesMock,
+  );
+
+export const getValidationResults = async (): Promise<ValidationResultItem[]> =>
+  withFallback(
+    async () => {
+      const response = await api.get<ValidationResultItem[]>("/api/portal/applicant/validation-results");
+      return response.data;
+    },
+    getValidationResultsMock,
+  );
+
+export const getUploadTracking = async (): Promise<UploadTrackingItem[]> =>
+  withFallback(
+    async () => {
+      const response = await api.get<UploadTrackingItem[]>("/api/portal/applicant/upload-tracking");
+      return response.data;
+    },
+    getUploadTrackingMock,
+  );
+
+export const getReuploadDocuments = async (): Promise<ReuploadDocument[]> =>
+  withFallback(
+    async () => {
+      const response = await api.get<ReuploadDocument[]>("/api/portal/applicant/reupload");
+      return response.data;
+    },
+    getReuploadDocumentsMock,
+  );
+
+export const getKycStages = async (): Promise<KycStage[]> =>
+  withFallback(
+    async () => {
+      const response = await api.get<KycStage[]>("/api/portal/applicant/kyc-status");
+      return response.data;
+    },
+    getKycStagesMock,
+  );
+
+export const getFaceVerification = async (): Promise<FaceVerificationState> =>
+  withFallback(
+    async () => {
+      const response = await api.get<FaceVerificationState>("/api/portal/applicant/face-verification");
+      return response.data;
+    },
+    getFaceVerificationMock,
+  );
