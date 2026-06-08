@@ -15,6 +15,16 @@ const priorityVariant = {
 
 export default function ApplicantDashboardPage() {
   const { data, isLoading, isError } = useApplicantDashboardQuery();
+  const portalLinks = [
+    { to: "/portal/applicant/ocr-results", label: "OCR Results", description: "Review extracted document fields" },
+    { to: "/portal/applicant/document-status", label: "Document Status", description: "Track each document decision" },
+    { to: "/portal/applicant/validation-results", label: "Validation Results", description: "Check field validation output" },
+    { to: "/portal/applicant/upload-tracking", label: "Upload Tracking", description: "Monitor current upload progress" },
+    { to: "/portal/applicant/reupload", label: "Re-upload Documents", description: "Replace rejected files" },
+    { to: "/portal/applicant/chatbot", label: "Chatbot", description: "Ask onboarding questions" },
+    { to: "/portal/applicant/kyc-status", label: "KYC Status", description: "View stage-by-stage KYC status" },
+    { to: "/portal/applicant/face-verification", label: "Face Verification", description: "Complete selfie verification" },
+  ];
 
   if (isLoading) return <LoadingState label="Loading applicant dashboard..." />;
   if (isError || !data) {
@@ -109,6 +119,22 @@ export default function ApplicantDashboardPage() {
               ))}
             </div>
           )}
+        </CardContent>
+      </Card>
+
+      <Card>
+        <CardHeader>
+          <CardTitle className="text-lg">Applicant Portal Navigation</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
+            {portalLinks.map((link) => (
+              <Link key={link.to} to={link.to} className="rounded-md border border-slate-200 p-3 transition hover:border-blue-300 hover:bg-blue-50/50">
+                <p className="text-sm font-medium text-slate-900">{link.label}</p>
+                <p className="mt-1 text-xs text-slate-500">{link.description}</p>
+              </Link>
+            ))}
+          </div>
         </CardContent>
       </Card>
     </div>

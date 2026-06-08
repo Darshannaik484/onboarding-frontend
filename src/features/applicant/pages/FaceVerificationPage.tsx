@@ -11,6 +11,7 @@ export default function FaceVerificationPage() {
   const { data, isLoading, isError } = useFaceVerificationQuery();
   const [status, setStatus] = useState<"idle" | "capturing" | "verified" | "failed">("idle");
   const [score, setScore] = useState(0);
+  const [selfieFile, setSelfieFile] = useState<File | null>(null);
 
   if (isLoading) return <LoadingState label="Loading face verification..." />;
   if (isError || !data) {
@@ -18,9 +19,10 @@ export default function FaceVerificationPage() {
   }
 
   const startCapture = () => {
+    if (!selfieFile) return;
     setStatus("capturing");
     setTimeout(() => {
-      const simulatedScore = 91;
+      const simulatedScore = Math.max(75, data.confidenceScore || 91);
       setScore(simulatedScore);
       setStatus(simulatedScore >= 85 ? "verified" : "failed");
     }, 900);
@@ -35,13 +37,25 @@ export default function FaceVerificationPage() {
         <div className="flex h-64 items-center justify-center rounded-lg border-2 border-dashed border-slate-300 bg-slate-50">
           <div className="text-center">
             <Camera className="mx-auto mb-2 h-8 w-8 text-slate-500" />
-            <p className="text-sm text-slate-600">Camera capture preview area</p>
+            <p className="text-sm text-slate-600">{selfieFile ? selfieFile.name : "Upload a selfie for verification"}</p>
             <p className="text-xs text-slate-500">{data.message}</p>
           </div>
         </div>
 
+        <input
+          type="file"
+          accept="image/*"
+          onChange={(event) => {
+            const file = event.target.files?.[0] ?? null;
+            setSelfieFile(file);
+            setStatus("idle");
+            setScore(0);
+          }}
+          className="block w-full max-w-xs text-xs text-slate-600 file:mr-3 file:rounded-md file:border file:border-slate-300 file:bg-white file:px-3 file:py-1.5 file:text-xs file:font-medium file:text-slate-700 hover:file:bg-slate-50"
+        />
+
         <div className="flex flex-wrap items-center gap-3">
-          <Button onClick={startCapture} disabled={status === "capturing"}>
+          <Button onClick={startCapture} disabled={status === "capturing" || !selfieFile}>
             {status === "capturing" ? "Capturing..." : "Capture & Verify"}
           </Button>
           {status === "verified" ? (
@@ -56,7 +70,12 @@ export default function FaceVerificationPage() {
           ) : null}
         </div>
 
-        <Progress label="Verification confidence" value={score} showPercentage variant={status === "failed" ? "error" : "success"} />
+        <Progress
+          label="Verification confidence"
+          value={status === "idle" ? data.confidenceScore : score}
+          showPercentage
+          variant={status === "failed" ? "error" : "success"}
+        />
       </CardContent>
     </Card>
   );

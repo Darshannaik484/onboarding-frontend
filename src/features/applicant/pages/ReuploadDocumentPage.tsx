@@ -9,10 +9,24 @@ import { useReuploadDocumentsQuery } from "../hooks/useApplicantPortalQueries";
 
 export default function ReuploadDocumentPage() {
   const { data, isLoading, isError } = useReuploadDocumentsQuery();
+  const [selectedFiles, setSelectedFiles] = useState<Record<string, File | null>>({});
+  const [uploadProgress, setUploadProgress] = useState<Record<string, number>>({});
   const [replacedDocId, setReplacedDocId] = useState<string | null>(null);
 
   if (isLoading) return <LoadingState label="Loading re-upload flow..." />;
   if (isError || !data) return <ErrorState title="Unable to load re-upload flow" onRetry={() => window.location.reload()} />;
+
+  const handleReupload = (docId: string) => {
+    if (!selectedFiles[docId]) return;
+    setReplacedDocId(null);
+
+    [25, 55, 85, 100].forEach((value, index) => {
+      setTimeout(() => {
+        setUploadProgress((prev) => ({ ...prev, [docId]: value }));
+        if (value === 100) setReplacedDocId(docId);
+      }, 250 * (index + 1));
+    });
+  };
 
   return (
     <div className="space-y-4">
@@ -47,11 +61,26 @@ export default function ReuploadDocumentPage() {
               </div>
 
               <div className="flex items-center gap-2">
-                <Button onClick={() => setReplacedDocId(doc.id)}>Replace Rejected Document</Button>
-                {replacedDocId === doc.id ? (
-                  <p className="text-xs text-emerald-700">Replacement queued and notification sent.</p>
-                ) : null}
+                <input
+                  type="file"
+                  onChange={(event) => {
+                    const file = event.target.files?.[0] ?? null;
+                    setSelectedFiles((prev) => ({ ...prev, [doc.id]: file }));
+                    setUploadProgress((prev) => ({ ...prev, [doc.id]: 0 }));
+                    setReplacedDocId(null);
+                  }}
+                  className="block w-full max-w-xs text-xs text-slate-600 file:mr-3 file:rounded-md file:border file:border-slate-300 file:bg-white file:px-3 file:py-1.5 file:text-xs file:font-medium file:text-slate-700 hover:file:bg-slate-50"
+                />
+                <Button onClick={() => handleReupload(doc.id)} disabled={!selectedFiles[doc.id]}>
+                  Replace Rejected Document
+                </Button>
               </div>
+              {uploadProgress[doc.id] ? (
+                <p className="text-xs text-slate-600">Upload progress: {uploadProgress[doc.id]}%</p>
+              ) : null}
+              {replacedDocId === doc.id ? (
+                <p className="text-xs text-emerald-700">Replacement uploaded and reviewer notified.</p>
+              ) : null}
             </CardContent>
           </Card>
         ))

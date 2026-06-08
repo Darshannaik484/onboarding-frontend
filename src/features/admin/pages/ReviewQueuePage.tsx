@@ -1,4 +1,5 @@
 import { useMemo } from "react";
+import { Link } from "react-router-dom";
 import { Card, CardContent, CardHeader, CardTitle } from "../../../components/ui/card";
 import { Badge } from "../../../components/ui/badge";
 import { Input } from "../../../components/ui/input";
@@ -107,6 +108,7 @@ export default function ReviewQueuePage() {
                 <TableHead>Submitted</TableHead>
                 <TableHead>Priority</TableHead>
                 <TableHead>Status</TableHead>
+                <TableHead className="text-right">Actions</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
@@ -118,6 +120,22 @@ export default function ReviewQueuePage() {
                   <TableCell>{row.priority.toUpperCase()}</TableCell>
                   <TableCell>
                     <Badge variant={statusVariant[row.status]}>{row.status.replace("_", " ")}</Badge>
+                  </TableCell>
+                  <TableCell>
+                    <div className="flex justify-end gap-2">
+                      <Link
+                        to={`/portal/admin/document-viewer?reviewId=${row.id}`}
+                        className="inline-flex h-8 items-center rounded-md border border-slate-300 px-3 text-xs font-medium text-slate-700 transition hover:bg-slate-50"
+                      >
+                        View
+                      </Link>
+                      <Link
+                        to={`/portal/admin/field-corrections?reviewId=${row.id}`}
+                        className="inline-flex h-8 items-center rounded-md border border-slate-300 px-3 text-xs font-medium text-slate-700 transition hover:bg-slate-50"
+                      >
+                        Correct
+                      </Link>
+                    </div>
                   </TableCell>
                 </TableRow>
               ))}

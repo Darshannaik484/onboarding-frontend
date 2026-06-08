@@ -1,4 +1,5 @@
 import { useMemo, useState } from "react";
+import { useSearchParams } from "react-router-dom";
 import { Card, CardContent, CardHeader, CardTitle } from "../../../components/ui/card";
 import { Input } from "../../../components/ui/input";
 import { Label } from "../../../components/ui/label";
@@ -9,9 +10,11 @@ import { LoadingState } from "../../../components/common/LoadingState";
 import { useCorrectionFieldsQuery } from "../hooks/useAdminPortalQueries";
 
 export default function FieldCorrectionPage() {
+  const [searchParams] = useSearchParams();
   const { data = [], isLoading, isError } = useCorrectionFieldsQuery();
   const [values, setValues] = useState<Record<string, string>>({});
   const [saved, setSaved] = useState(false);
+  const reviewId = searchParams.get("reviewId");
 
   const hasValidationIssues = useMemo(
     () =>
@@ -30,6 +33,7 @@ export default function FieldCorrectionPage() {
     <Card>
       <CardHeader>
         <CardTitle className="text-lg">Field Correction Screen</CardTitle>
+        {reviewId ? <p className="text-xs text-slate-500">Review reference: {reviewId}</p> : null}
       </CardHeader>
       <CardContent className="space-y-4">
         {data.length === 0 ? (
